@@ -112,6 +112,75 @@ attributions, delta = intgrads_map(
 )
 ```
 
+## Running the Project
+
+Follow these steps to run the project:
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/battery-capacity-prediction.git
+cd battery-capacity-prediction
+```
+
+### 2. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Or install dependencies manually:
+
+```bash
+pip install torch numpy pandas matplotlib scikit-learn captum scipy
+```
+
+### 3. Prepare Data
+
+Ensure your data is organized in the following structure:
+- EIS data files in `EIS_data/` directory
+- Capacity data files in `Capacity/` directory
+
+### 4. Run Training Script
+
+```bash
+python main.py
+```
+
+Alternatively, you can create your own script using the code examples provided in the "Training a Model" section.
+
+### 5. Evaluate and Visualize Results
+
+The training script automatically:
+- Saves the best model to `best_model.pt`
+- Generates loss curves in `loss_curve.png`
+- Displays MSE and R² metrics for the test set
+
+### 6. Using a Trained Model for Predictions
+
+```python
+import torch
+from Scripts.CNN_Class import MultiSource1DCNN
+
+# Load model architecture
+model = MultiSource1DCNN(
+    seq_len=60,
+    num_sources=4,
+    conv_channels=(16, 32, 64),
+    kernel_sizes=(3, 3, 3),
+    fc_hidden=128,
+    num_classes=1
+)
+
+# Load trained weights
+model.load_state_dict(torch.load('best_model.pt'))
+model.eval()
+
+# Make predictions
+with torch.no_grad():
+    predictions = model(input_data)
+```
+
 ## Results
 
 The model performance is evaluated using:
